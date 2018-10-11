@@ -1,0 +1,6 @@
+{
+    "getCoinDetails": "https://api.coinmarketcap.com/v2/ticker/?limit=20",
+    "supportedCoins":"BTC,ETH,LTC,BCH,ETC",
+    "apiKey": "02971c91be5bdbc0374d791e291b7e5c",
+    "getCurrenciesSparkline": "https://api.nomics.com/v1/currencies/sparkline?key=02971c91be5bdbc0374d791e291b7e5c&start=2018-07-25T00%3A00%3A00Z"
+}

@@ -10,6 +10,7 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-fusioncharts": "^2.0.5",
+    "react-responsive": "^5.0.0",
     "react-scripts": "2.0.4",
     "react-table": "^6.8.6",
     "superagent": "^4.0.0-beta.5"

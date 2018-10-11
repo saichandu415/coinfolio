@@ -1,48 +1,35 @@
 import React, { Component } from 'react';
 import request from 'superagent';
-// eslint-disable-next-line 
 import moment from 'moment';
-import FusionCharts from 'fusioncharts';
-import Charts from 'fusioncharts/fusioncharts.charts';
-import ReactFC from 'react-fusioncharts';
 import _ from 'lodash';
 
-import ReactTable from "react-table";
-import 'react-table/react-table.css'
-
+import FusionCharts from 'fusioncharts';
+import Charts from 'fusioncharts/fusioncharts.charts';
 import FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
+import ReactFC from 'react-fusioncharts';
+
+// Css Styles
 import './styles/App.css';
+
+//Custom components imports
+import * as content from './content.json';
+import HomeScreen from './screens/homeScreen/HomeScreen'
 
 ReactFC.fcRoot(FusionCharts, Charts, FusionTheme);
 
-
-class App extends Component {
+export default class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      currencyData: {
-        "chart": {
-          "caption": "Cryptocurrency current rate",
-          "xAxisName": "Date",
-          "yAxisName": "Value in USD",
-          "theme": "fusion"
-        }
-      },
-      chartConfigs: {
-        type: 'column2d',
-        width: "90%",
-        height: 400,
-        dataFormat: 'json'
-      },
       isDataReceived: false,
-      data: []
+      data: [],
+      chartCategory: [],
+      chartDataset: []
     }
-
   }
   componentDidMount() {
-    request.get('https://api.coinmarketcap.com/v2/ticker/?limit=20')
+    request.get(content.getCoinDetails)
       .then(res => {
-
         var dataSet = [];
         if (!_.isEmpty(res.body.data)) {
           _.forIn(res.body.data, function (value) {
@@ -50,112 +37,44 @@ class App extends Component {
           });
 
           this.setState({
-              isDataReceived: true,
-              data: dataSet
+            isDataReceived: true,
+            data: dataSet
           });
-
-          // this.setState((prevState) => {
-          //   return {
-          //     currencyData: _.set(prevState.currencyData, "data", dataSet ),
-          //     chartConfigs: _.set(prevState.chartConfigs, "dataSource",this.state.currencyData),
-          //     isDataReceived: true,
-
-          //   };
-          // });
         }
       });
+
+      let categoryDetails = [], chartBodyArr = [], categoriesArr= [], categories = [];
+
+      request.get(content.getCurrenciesSparkline)
+        .then(res => {
+          _.forEach((content.supportedCoins).split(","), function(value) {
+            let chartBody = {}, priceList = [];
+            let currenyDetails = _.nth(res.body, _.findIndex(res.body, function(o) { return o.currency === value; }));
+            categoryDetails = currenyDetails.timestamps;
+            _.set(chartBody, "seriesname", currenyDetails.currency);
+            _.forEach(currenyDetails.prices, function(priceVal){
+              priceList.push(_.set({}, "value", _.toNumber(priceVal)));
+            });
+
+            _.set(chartBody, "data", priceList);
+            chartBodyArr.push(chartBody);
+          });
+
+          _.forEach(categoryDetails, function(categoryVal){
+            categoriesArr.push( _.set({}, "label", moment(categoryVal).format('Do MMM YYYY')));
+          });
+
+          categories.push(_.set({}, "category", categoriesArr));
+          
+          this.setState((prevState) => {
+            return {
+              chartCategory: categories,
+              chartDataset: chartBodyArr
+            };
+          });
+        });  
   }
   render() {
-
-    const columns = [
-      {
-        Header: 'Name',
-        accessor: 'name',
-        Cell: props => <p>{props.value}</p>
-      }, {
-        Header: 'Symbol',
-        accessor: 'symbol',
-        Cell: props => <p>{props.value}</p>
-      },
-      {
-        Header: 'Rank',
-        accessor: 'rank',
-        Cell: props => <p className='number'>{props.value}</p>
-      },
-      {
-        id: 'Price',
-        Header: 'Price',
-        accessor: d => d.quotes.USD.price,
-        Cell: props => <p className='number'>${props.value}</p>
-      },
-      {
-        Header: props => <span>Total Supply</span>,
-        accessor: 'total_supply',
-        Cell: props => <p className='number'>{props.value}</p>
-      },
-      {
-        Header: props => <span>Circulating Supply</span>,
-        accessor: 'circulating_supply',
-        Cell: props => <p className='number'>{props.value}</p>
-      },
-      {
-        id: 'percent_change_1h',
-        Header: props => <span>Change in 1 hr</span>,
-        accessor: d => d.quotes.USD.percent_change_1h,
-        Cell: row => (
-            <div
-              style={{
-                color:
-                  row.value > 0
-                    ? "#85cc00"
-                      : "#ff2e00",
-              }}
-            >
-               <p>{row.value}%</p>
-            </div>
-        )
-      },
-      {
-        id: 'percent_change_24h',
-        Header: props => <span>Change in 24hr</span>,
-        accessor: d => d.quotes.USD.percent_change_24h,
-        Cell: row => (
-          <div
-            style={{
-              color:
-                row.value > 0
-                  ? "#85cc00"
-                    : "#ff2e00",
-            }}
-          >
-             <p>{row.value}%</p>
-          </div>
-      )
-      },
-      {
-        id: 'percent_change_7d',
-        Header: props => <span>Change in 7 days</span>,
-        accessor: d => d.quotes.USD.percent_change_7d,
-        Cell: row => (
-          <div
-            style={{
-              color:
-                row.value > 0
-                  ? "#85cc00"
-                    : "#ff2e00",
-            }}
-          >
-             <p>{row.value}%</p>
-          </div>
-        )  
-      },
-      {
-        Cell: () => (
-          <button className= 'buy-button'> Buy </button>
-        )  
-      }
-    ];
-
 
     return (
       <div>
@@ -166,18 +85,14 @@ class App extends Component {
         </header>
         <div className='data-table'>
           {this.state.isDataReceived &&
-
-            <ReactTable data={this.state.data} columns={columns} showPagination={false}/>
+            <HomeScreen 
+                  data={this.state.data}
+                  chartCategory={this.state.chartCategory} 
+                  chartDataset={this.state.chartDataset}
+                  />
           }
-          {!this.state.isDataReceived &&
-            <p> Loading...</p>
-          }
-           {/*<ReactFC {...this.state.chartConfigs} />  */}
         </div>
-
       </div>
     );
   }
 }
-
-export default App;
