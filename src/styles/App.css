@@ -18,3 +18,24 @@
   text-align: flex-start;
 
 }
+
+.data-table { 
+  align-content: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.buy-button {
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  padding: 10px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 4px 2px;
+  cursor: pointer;
+}
