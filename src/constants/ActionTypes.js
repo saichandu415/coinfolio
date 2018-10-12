@@ -1,0 +1,1 @@
+export const RECEIVE_DETAILS= 'RECEIVE_DETAILS';

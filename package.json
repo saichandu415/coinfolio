@@ -2,6 +2,10 @@
   "name": "coinfolio",
   "version": "0.1.0",
   "private": true,
+  "devDependencies": {
+    "enzyme": "^3.7.0",
+    "enzyme-adapter-react-16": "^1.6.0"
+  },
   "dependencies": {
     "coinbase": "^2.0.8",
     "fusioncharts": "^3.13.1-sr.2",
@@ -10,9 +14,11 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-fusioncharts": "^2.0.5",
+    "react-redux": "^5.0.7",
     "react-responsive": "^5.0.0",
     "react-scripts": "2.0.4",
     "react-table": "^6.8.6",
+    "redux": "^4.0.0",
     "superagent": "^4.0.0-beta.5"
   },
   "scripts": {

@@ -1,6 +1,7 @@
 import React from 'react';
+import moment from 'moment';
 
-export const columns = [
+export const columnsConfig = [
   {
     Header: 'Name',
     accessor: 'name',
@@ -92,3 +93,42 @@ export var chartConfigs = {
     "theme": "fusion"
   }
 };
+
+
+export const columnsConfig2 = [
+  {
+    Header: 'Currency',
+    accessor: 'currency',
+    Cell: props => <p>{props.value}</p>
+  }, {
+    Header: 'Price',
+    accessor: 'close',
+    Cell: props => <p>{props.value}</p>
+  },
+  {
+    Header: '1d Change',
+    accessor: 'dayOpen',
+    Cell: props => <p className='number'>{props.value}</p>
+  },
+  {
+    Header: '1d Volume',
+    accessor: 'dayVolume',
+    Cell: props => <p className='number'>{props.value}</p>
+  },
+  {
+    Header: 'Hightest Price',
+    accessor: 'high',
+    Cell: props => <p className='number'>{props.value}</p>
+  },
+  {
+    Header: 'Hightest Time',
+    accessor: 'highTimestamp',
+    Cell: props => (<p className='number'>{moment(props.value).format("Do MMM YYYY")}</p>)
+  },
+  {
+    Cell: () => (
+      <button className='buy-button'> Buy </button>
+    )
+  }
+];
+

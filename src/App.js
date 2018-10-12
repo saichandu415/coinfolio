@@ -3,19 +3,16 @@ import request from 'superagent';
 import moment from 'moment';
 import _ from 'lodash';
 
-import FusionCharts from 'fusioncharts';
-import Charts from 'fusioncharts/fusioncharts.charts';
-import FusionTheme from 'fusioncharts/themes/fusioncharts.theme.fusion';
-import ReactFC from 'react-fusioncharts';
-
 // Css Styles
 import './styles/App.css';
 
 //Custom components imports
 import * as content from './content.json';
-import HomeScreen from './screens/homeScreen/HomeScreen'
+import HomeScreen from './screens/homeScreen/HomeScreen';
 
-ReactFC.fcRoot(FusionCharts, Charts, FusionTheme);
+//Actions
+import * as currencyActions from './actions';
+import { store } from './index';
 
 export default class App extends Component {
   constructor(props) {
@@ -23,6 +20,7 @@ export default class App extends Component {
     this.state = {
       isDataReceived: false,
       data: [],
+      data2: [],
       chartCategory: [],
       chartDataset: []
     }
@@ -35,6 +33,7 @@ export default class App extends Component {
           _.forIn(res.body.data, function (value) {
             dataSet.push(value);
           });
+          store.dispatch(currencyActions.receiveDetails(dataSet))
 
           this.setState({
             isDataReceived: true,
@@ -73,6 +72,17 @@ export default class App extends Component {
             };
           });
         });  
+
+      request.get(content.getCurrenciesDashboard)
+      .then(res => {
+        console.log();
+        this.setState({
+          data2: res.body
+        });
+      });  
+      console.log(store.getState());
+      console.log();
+      console.log(store.getState());
   }
   render() {
 
@@ -89,6 +99,7 @@ export default class App extends Component {
                   data={this.state.data}
                   chartCategory={this.state.chartCategory} 
                   chartDataset={this.state.chartDataset}
+                  data2={this.state.data2}
                   />
           }
         </div>
