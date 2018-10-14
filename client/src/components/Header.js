@@ -11,6 +11,9 @@ import _ from 'lodash';
 import request from 'superagent';
 import { store } from './../store';
 import * as userActions from './../actions';
+import FaBars from 'react-icons/lib/fa/bars';
+import TransactionTable from './TransactionTable';
+import * as content from './../constants/content.json';
 
 let status = store.getState().userStatus.status;
 
@@ -27,7 +30,9 @@ export default class Header extends React.Component {
        emailId: '',
        isNewUser: false,
        err:"",
-       isUserLoggedIn: false
+       isUserLoggedIn: false,
+       openTransaction: false,
+       transactionData: ''
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -37,6 +42,7 @@ export default class Header extends React.Component {
     this.loginUser = this.loginUser.bind(this);
     this.buttonAction = this.buttonAction.bind(this);
     this.signUp = this.signUp.bind(this);
+    this.showTransactions = this.showTransactions.bind(this);
 
   }
 
@@ -65,12 +71,15 @@ export default class Header extends React.Component {
   }
 
   handleClose(){
-      this.setState({ open: false });
+      this.setState({
+        open: false,
+        openTransaction: false
+       });
     }
 
   submitData = () => {
     if(!_.isEmpty(this.state.emailId)){
-      request.get('http://localhost:3005/userCheck/')
+      request.get(content.userCheck)
          .query({ email: this.state.emailId})
          .then(res => {
            if(_.isEqualWith(res.status, 200) && !_.isEmpty(res.body)){
@@ -97,7 +106,7 @@ export default class Header extends React.Component {
         "email": this.state.emailId,
         "password": this.state.password,
       };
-      request.post('http://localhost:3005/validDateUser')
+      request.post(content.validDateUser)
          .set('Content-Type', 'application/json')
          .send(body)
          .then(res => {
@@ -108,6 +117,16 @@ export default class Header extends React.Component {
                 isUserLoggedIn: true
               });
               status = store.dispatch(userActions.updateUserStatus(true)).userStatus;
+              request.get(content.transactionDetails)
+                   .query({ email: this.state.emailId})
+                   .then(res => {
+                     console.log(res);
+                     if(_.isEqualWith(res.status, 200) && !_.isEmpty(res.body)){
+                        this.setState({
+                          transactionData
+                        });
+                     }
+                });
             }
             else{
               this.setState({
@@ -128,7 +147,7 @@ export default class Header extends React.Component {
         "email": this.state.emailId,
         "password": this.state.password,
       };
-      request.post('http://localhost:3005/newUser')
+      request.post(content.newUser)
          .set('Content-Type', 'application/json')
          .send(body)
          .then(res => {
@@ -155,13 +174,36 @@ export default class Header extends React.Component {
     }
   }
 
+  showTransactions = async () => {
+    this.setState({ openTransaction: true });
+    // this.state.emailId
+    // if(!_.isEmpty(this.state.emailId)){
+    //
+    //        await request.get('http://localhost:3005/transactionDetails/')
+    //            .query({ email: 'test1237@gmail.com'})
+    //            .then(res => {
+    //              console.log(res);
+    //              if(_.isEqualWith(res.status, 200) && !_.isEmpty(res.body)){
+    //                 this.setState({
+    //                 });
+    //              }
+    //         });
+    // }
+  }
+
   render() {
+     const { classes } = this.props;
     return (
       <div>
         <header className={styles.appHeader}>
           <p className={styles.logo}>CoinFolio</p>
-          { !this.state.isUserLoggedIn && <p className={styles.signUp} onClick={this.handleClickOpen}> SignUp/Login</p> }
-            <Dialog
+           { this.state.isUserLoggedIn &&
+             <div onClick={this.showTransactions}>
+               <FaBars size={25} className={styles.barIcon}/>
+             </div>
+           }
+           { !this.state.isUserLoggedIn && <p className={styles.signUp} onClick={this.handleClickOpen}> SignUp/Login</p> }
+           <Dialog
                 open={this.state.open}
                 onClose={this.handleClose}
                 aria-labelledby="form-dialog-title"
@@ -211,6 +253,17 @@ export default class Header extends React.Component {
                   </Button>
                 </DialogActions>
                 {this.state.err && <p className={styles.errorMessage}>{this.state.err}</p>}
+           </Dialog>
+           <Dialog
+                open={this.state.openTransaction}
+                onClose={this.handleClose}
+                onBackdropClick={this.handleClose}
+                scroll={'paper'}
+                aria-labelledby="form-dialog-title"
+                fullWidth={true}
+                fullScreen={true}>
+                <DialogTitle id="form-dialog-title">Transactions</DialogTitle>
+                <TransactionTable/>
            </Dialog>
         </header>
       </div>

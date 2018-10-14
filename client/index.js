@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from 'react-redux';
 import createHistory from "history/createBrowserHistory";
 import HomePage from './src/components/HomePage';
+import * as content from './src/constants/content.json';
 
 import { store } from './src/store';
 
@@ -19,7 +20,7 @@ class WebApp extends React.Component {
 
     }
     callApi = async () => {
-      const response = await fetch('/api/hello');
+      const response = await fetch(content.hello);
       const body = await response;
       if (response.status !== 200) throw Error(body.json().message);
       return body;

@@ -26,9 +26,7 @@ app.get('/api/hello', (req, res) => {
 });
 
 app.get('/userCheck/', (req,res) => {
-  console.log(req.query.email);
    var query = "SELECT id, email FROM users WHERE email=" + mysql.escape(req.query.email);
-
   connection.query(query, function (error, results, fields) {
     if (error){
       res.sendStatus(400);
@@ -55,10 +53,8 @@ app.post('/validDateUser', (req,res) => {
 
 
 app.post('/newUser', (req,res) => {
-  console.log(req.body);
   var query = mysql.format('INSERT INTO users(email, acctpass) values(?,?)', [req.body.email, req.body.password]);
 
- console.log(query);
  connection.query(query, function (error, results, fields) {
    if (error){
      res.sendStatus(400);
@@ -67,6 +63,22 @@ app.post('/newUser', (req,res) => {
    res.set('Access-Control-Allow-Origin', "*");
    console.log(results.affectedRows);
    res.send(JSON.stringify(results.affectedRows));
+ });
+});
+
+
+app.get('/transactionDetails/', (req,res) => {
+  var query = 'SELECT id, coinCd, date, quantity, type from transtable where email ='+ mysql.escape(req.query.email);
+
+ console.log(query);
+ connection.query(query, function (error, results, fields) {
+   if (error){
+     res.sendStatus(400);
+   }
+   res.type('application/json');
+   res.set('Access-Control-Allow-Origin', "*");
+   console.log(results);
+   res.send(JSON.stringify(results));
  });
 });
 
