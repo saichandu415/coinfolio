@@ -31,14 +31,14 @@ export default class HomePage extends Component {
       categories = [];
 
     request
-      .get(content.getCurrenciesDashboard)
+      .get(content.currenciesDashboard)
       .then(res => {
         store.dispatch(currencyActions.receiveDetails(res));
         this.setState({isDataReceived: true});
       });
 
     request
-      .get(content.getCurrenciesSparkline)
+      .get(content.currenciesSparkline)
       .then((res) => {
         _.forEach((content.supportedCoins).split(","), function (value) {
             var chartBody = {}, priceList = [], currenyDetails = [];

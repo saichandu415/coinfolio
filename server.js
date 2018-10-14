@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const path = require('path');
 const port = process.env.PORT || 3005;
 var cors = require('cors');
+var request = require('superagent');
 
 const mysql = require('mysql');
 const connection = mysql.createConnection({
@@ -82,10 +83,25 @@ app.get('/transactionDetails/', (req,res) => {
  });
 });
 
-
-
 // app.get('*', (req,res) => {
 //  res.sendFile(path.join(__dirname, 'client/web/builds/index.html'));
 // });
+
+
+app.get('/currenciesSparkline/', (req,res) => {
+  request.get('https://api.nomics.com/v1/currencies/sparkline?key=02971c91be5bdbc0374d791e291b7e5c&start=2018-07-25T00%3A00%3A00Z')
+          .then(response => {
+             res.send(response.body);
+          });
+});
+
+app.get('/currenciesDashboard/', (req,res) => {
+  request.get('https://api.nomics.com/v1/dashboard?key=02971c91be5bdbc0374d791e291b7e5c')
+          .then(response => {
+             res.send(response.body);
+          });
+});
+
+
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
