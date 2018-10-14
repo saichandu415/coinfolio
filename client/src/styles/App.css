@@ -1,0 +1,47 @@
+.appHeader {
+  background-color: #7CFC00;
+  display: flex;
+  flex-direction: row;
+  color: black;
+}
+
+.signUp, .login{
+  margin: 10px;
+  text-decoration: underline;
+  align-items: flex-end;
+  justify-content: flex-end;
+  cursor: pointer;
+}
+
+.logo {
+  margin: 15px;
+  flex: 1;
+  text-align: flex-start;
+
+}
+
+.dataTable {
+  align-content: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.buyButton {
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  padding: 10px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.errorMessage {
+  text-align: center;
+  color: red;
+}

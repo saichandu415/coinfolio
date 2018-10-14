@@ -1,39 +1,31 @@
 {
   "name": "coinfolio",
-  "version": "0.1.0",
-  "private": true,
-  "devDependencies": {
-    "enzyme": "^3.7.0",
-    "enzyme-adapter-react-16": "^1.6.0"
-  },
-  "dependencies": {
-    "coinbase": "^2.0.8",
-    "fusioncharts": "^3.13.1-sr.2",
-    "lodash": "^4.17.11",
-    "moment": "^2.22.2",
-    "react": "^16.5.2",
-    "react-dom": "^16.5.2",
-    "react-fusioncharts": "^2.0.5",
-    "react-redux": "^5.0.7",
-    "react-responsive": "^5.0.0",
-    "react-scripts": "2.0.4",
-    "react-table": "^6.8.6",
-    "redux": "^4.0.0",
-    "superagent": "^4.0.0-beta.5"
-  },
+  "version": "1.0.0",
+  "description": "This is coinfolio server ",
+  "main": "server.js",
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "post-install": "cd client && npm i && cd..",
+    "client": "cd client && npm run run-web",
+    "server": "node server.js",
+    "start-servers": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Akansha725/coinfolio.git"
   },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+  "author": "Akansha Sudhir",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Akansha725/coinfolio/issues"
+  },
+  "homepage": "https://github.com/Akansha725/coinfolio#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "^2.8.4",
+    "express": "^4.16.4",
+    "mysql": "^2.16.0"
+  },
+  "devDependencies": {
+    "concurrently": "^4.0.1"
+  }
 }
