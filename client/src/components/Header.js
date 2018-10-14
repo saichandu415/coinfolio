@@ -110,7 +110,6 @@ export default class Header extends React.Component {
          .set('Content-Type', 'application/json')
          .send(body)
          .then(res => {
-            console.log(res.body);
             if(_.isEqualWith(res.status, 200)  && !_.isEmpty(res.body)){
               this.handleClose();
               this.setState({
@@ -120,10 +119,9 @@ export default class Header extends React.Component {
               request.get(content.transactionDetails)
                    .query({ email: this.state.emailId})
                    .then(res => {
-                     console.log(res);
                      if(_.isEqualWith(res.status, 200) && !_.isEmpty(res.body)){
                         this.setState({
-                          transactionData
+                          transactionData: res.body
                         });
                      }
                 });
@@ -151,7 +149,6 @@ export default class Header extends React.Component {
          .set('Content-Type', 'application/json')
          .send(body)
          .then(res => {
-            console.log(res.body);
             if(_.isEqualWith(res.status, 200)){
               this.handleClose();
               store.dispatch(userActions.updateUserStatus());
@@ -176,19 +173,6 @@ export default class Header extends React.Component {
 
   showTransactions = async () => {
     this.setState({ openTransaction: true });
-    // this.state.emailId
-    // if(!_.isEmpty(this.state.emailId)){
-    //
-    //        await request.get('http://localhost:3005/transactionDetails/')
-    //            .query({ email: 'test1237@gmail.com'})
-    //            .then(res => {
-    //              console.log(res);
-    //              if(_.isEqualWith(res.status, 200) && !_.isEmpty(res.body)){
-    //                 this.setState({
-    //                 });
-    //              }
-    //         });
-    // }
   }
 
   render() {
@@ -260,10 +244,9 @@ export default class Header extends React.Component {
                 onBackdropClick={this.handleClose}
                 scroll={'paper'}
                 aria-labelledby="form-dialog-title"
-                fullWidth={true}
-                fullScreen={true}>
+                fullWidth={true}>
                 <DialogTitle id="form-dialog-title">Transactions</DialogTitle>
-                <TransactionTable/>
+                <TransactionTable data={this.state.transactionData}/>
            </Dialog>
         </header>
       </div>

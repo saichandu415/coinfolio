@@ -46,10 +46,18 @@ function TransactionTable(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-              <TableCell numeric>Cd</TableCell>
-              <TableCell numeric>Quantity</TableCell>
-              <TableCell numeric>Type</TableCell>
-              <TableCell numeric>TimeStamp</TableCell>
+        {(props.data) && props.data.map(row => {
+          return (
+            <TableRow key={row.id} onClick={event => props.buyCurrency(event, row)}>
+                  <TableCell component="th" scope="row">
+                      {row.coinCd}
+                  </TableCell>
+                  <TableCell numeric>${(row.quantity).toFixed(18)}</TableCell>
+                  <TableCell>{row.type}</TableCell>
+                  <TableCell numeric>{moment(row.date).format("Do MMM YYYY")}</TableCell>
+            </TableRow>
+          );
+        })}
         </TableBody>
       </Table>
     </Paper>
@@ -59,20 +67,4 @@ function TransactionTable(props) {
 export default withStyles(styles)(TransactionTable);
 
 //
-// {(props.data) && data.map(row => {
-//   return (
-//     <TableRow key={row.currency} onClick={event => props.buyCurrency(event, row)}>
-//       <TableCell component="th" scope="row">
-//         {row.currency}
-//       </TableCell>
-//       <TableCell numeric>{isEmpty(row.close)? '': '$'+row.close}</TableCell>
-//       <TableCell numeric>{row.dayOpen}</TableCell>
-//       <TableCell numeric>{row.dayVolume}</TableCell>
-//       <TableCell numeric>{row.high}</TableCell>
-//       <TableCell numeric>{moment(row.highTimestamp).format("Do MMM YYYY")}</TableCell>
-//       <TableCell>
-//         <button className={cssStyles.buyButton}> Buy </button>
-//       </TableCell>
-//     </TableRow>
-//   );
-// })}
+//

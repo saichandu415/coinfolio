@@ -62,7 +62,6 @@ app.post('/newUser', (req,res) => {
    }
    res.type('application/json');
    res.set('Access-Control-Allow-Origin', "*");
-   console.log(results.affectedRows);
    res.send(JSON.stringify(results.affectedRows));
  });
 });
@@ -70,15 +69,12 @@ app.post('/newUser', (req,res) => {
 
 app.get('/transactionDetails/', (req,res) => {
   var query = 'SELECT id, coinCd, date, quantity, type from transtable where email ='+ mysql.escape(req.query.email);
-
- console.log(query);
  connection.query(query, function (error, results, fields) {
    if (error){
      res.sendStatus(400);
    }
    res.type('application/json');
    res.set('Access-Control-Allow-Origin', "*");
-   console.log(results);
    res.send(JSON.stringify(results));
  });
 });
