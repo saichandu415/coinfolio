@@ -12,7 +12,8 @@ const connection = mysql.createConnection({
   host     : 'rm-6gj8nn1cm85hux6cxio.mysql.ap-south-1.rds.aliyuncs.com',
   user     : 'akansha',
   password : 'Akasud25',
-  database : 'CoinFolioDB'
+  database : 'CoinFolioDB',
+  port : 3306
 });
 
 app.use(express.static(path.join(__dirname, 'build')));
